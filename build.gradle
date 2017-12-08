@@ -13,3 +13,11 @@ jar {
         attributes 'Main-Class': 'com.loganbe.ExaneSpringBootController'
     }
 }
+task stage(dependsOn: ['build', 'clean'])
+build.mustRunAfter clean
+task copyToLib(type: Copy) {
+    into "$buildDir/lib"
+    from(configurations.compile)
+}
+
+stage.dependsOn(copyToLib)
