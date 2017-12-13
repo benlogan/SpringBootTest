@@ -10,6 +10,8 @@ import org.springframework.stereotype.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import com.google.gson.Gson;
+
 @Controller
 @EnableAutoConfiguration
 public class ExaneSpringBootController {
@@ -47,13 +49,20 @@ public class ExaneSpringBootController {
         ResponseEntity<CheckUser> respEntity = restTemplate
         	    .exchange(crmService, HttpMethod.GET, entityReq, CheckUser.class);
         
-        System.out.println(respEntity.toString());
+        System.out.println("CRM Response : " + respEntity.toString());
     	
-    	// FIXME use ExaneResponse
         // FIXME we shouldn't be passing the input email back - injection risk etc
-    	String jsonResponse = 
-        		"{\"authorised\": \"" + respEntity.getBody().isExaneResearchAccess() + "\",\"email\":\"" + userEmailAddress + "\",\"content\":\"http://google.com\"}";
+        
+        ExaneResponse response = new ExaneResponse();
+        response.setAuthorised(respEntity.getBody().isExaneResearchAccess());
+        response.setEmail(userEmailAddress);
+        response.setContent("http://google.com");
+        
+        Gson gson = new Gson();
+        String jsonResponse = gson.toJson(response);
+    	//String jsonResponse =	"{\"authorised\": \"" + respEntity.getBody().isExaneResearchAccess() + "\",\"email\":\"" + userEmailAddress + "\",\"content\":\"http://google.com\"}";
 
+        System.out.println("JSON Response : " + jsonResponse);
     	return jsonResponse;
     }
     
