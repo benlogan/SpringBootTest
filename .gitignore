@@ -23,3 +23,8 @@ hs_err_pid*
 /.gradle/
 /build/
 /bin/
+
+# eclipse (or local runtime) files
+.classpath
+.project
+.settings
